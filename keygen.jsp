@@ -1,0 +1,59 @@
+<%@ include file="AAheader.jsp"%><%@ page  import="java.sql.*" import="databaseconnection.*,ECC.*"%>
+
+<section id="inner-headline">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-12">
+				<h2 class="pageTitle">Key Generation</h2>
+			</div>
+		</div>
+	</div>
+	</section>
+
+<div >
+      <!-- <div class="common_content"> --><br><br><br>
+	 
+<%
+
+Connection con = databasecon.getconnection();
+Statement st=con.createStatement();
+Statement st1=con.createStatement();
+String atrbt=null;
+String pars=null,msk=null;
+ResultSet rss1=st1.executeQuery("select *from keygen");
+if(rss1.next()){
+pars=rss1.getString(2);
+msk=rss1.getString(3);
+}
+
+ResultSet rss=st.executeQuery(" select *from  register where uid='"+request.getParameter("id")+"'");
+if(rss.next()){
+atrbt=rss.getString(6)+","+rss.getString(7)+","+rss.getString(8)+","+rss.getString(9);
+}
+%>
+ 
+<form action="keygen1.jsp">
+<table align="center">
+<tr>
+	<td><h3>Public Parameter ( pars ) :</h2></td>
+	<td><input type="text" class="form-control"  name="pk" value=<%=pars%>><input type="hidden" name="id" value=<%=request.getParameter("id")%>></td>
+</tr>
+
+<tr>
+	<td><h3>Master key ( msk ) :</h2></td>
+	<td><input type="text" name="msk" class="form-control"  value=<%=msk%>><input type="hidden" name="id" value=<%=request.getParameter("id")%>></td>
+</tr>
+<tr>
+	<td><h3>Attributes ( A ) :</h2></td>
+	<td><textarea name="atrbt" class="form-control"  cols=25 rows=2><%=atrbt%></textarea></td>
+</tr>
+<tr><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" class="btn btn-primary pull-right" value="GetPrivateKey "></td></tr>
+</table>
+</form>
+
+
+
+   </center>  
+        </div>
+     <br><br><br><br><br><br><br><br>
+ 

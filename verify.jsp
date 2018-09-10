@@ -1,0 +1,52 @@
+  <%@ include file="privateheader.jsp"%>
+  <head>
+  <meta charset="utf-8">
+  <%! String Cpabe_enc="AES_ENCRYPT";%>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Attribute-Based Storage</title>
+  <!--[if lt IE 9]><script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+</head>
+<%@ page import="java.io.*"%>
+<%@ page import="databaseconnection.*"%>
+<%@ page import="java.sql.*,SHA.*,CME.*,cryptographic.*,cpabe.*,it.unisa.dia.gas.jpbc.Element"%>
+<%! int rno=0;
+String s=null;String filedata=null;%>
+
+<%!String  thisLine = null,uid;
+StringBuffer sb1=null;
+String filename=null,unm=null,fid=null,fnm=null,pkey=null;
+int i=0;
+byte data[]=null;
+%>
+<% 
+
+
+Connection con=databasecon.getconnection();
+Statement st=con.createStatement();
+Statement st1=con.createStatement();
+
+
+		 String fid=request.getParameter("fid");
+		  String pf=request.getParameter("pf");
+
+ResultSet rst=st1.executeQuery("select owner from temp where fid="+fid+"");
+if(rst.next()){
+
+uid=rst.getString(1);
+}
+
+boolean sts=Zero_Knowledge_Proof.validate(Double.parseDouble(pf));
+System.out.println("stssss="+sts);
+
+if(sts){
+
+	st1.executeUpdate("update temp set sts='equaltest' where fid="+fid+"");
+	response.sendRedirect("vtest.jsp?msg=proved");
+}else{
+
+st1.executeUpdate("update request set status='finish',proof='0' where uid='"+uid+"'");
+response.sendRedirect("vtest.jsp?msg1=NotProved");
+}
+%>
+	 
